@@ -28,7 +28,11 @@ export default class LoadBalancer {
         return sendToServer(server.id);
       }
       //Si el servidor está ocupado, mandar el que tenga menos peticiones en cola
-      if (server.queuedRequests.length < this.servers[0].queuedRequests.length) {
+      //if (server.queuedRequests.length < this.servers[0].queuedRequests.length) {
+      //  return sendToServer(server.id);
+      //}
+      //Si el servidor está ocupado, mandar el que tenga más capacidad de trabajo (power) disponible
+      if (server.power - request.work > this.servers[0].power - request.work || server.queuedRequests.length < this.servers[0].queuedRequests.length) {
         return sendToServer(server.id);
       }
     }
