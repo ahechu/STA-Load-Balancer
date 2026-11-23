@@ -27,14 +27,18 @@ export default class LoadBalancer {
       if (!server.activeRequest) {
         return sendToServer(server.id);
       }
+    }
+    let minQueuedServer = this.servers[0];
+    for (const server of this.servers) {
       //Si el servidor está ocupado, mandar el que tenga menos peticiones en cola
-      //if (server.queuedRequests.length < this.servers[0].queuedRequests.length) {
+      if (minQueuedServer.queuedRequests.length > server.queuedRequests.length) {
+        minQueuedServer = server;
+        return sendToServer(minQueuedServer.id);
+      }
+      //Si el servidor está ocupado, mandar el que tenga más capacidad de trabajo (power) disponible
+      //if (server.power - request.work > this.servers[0].power - request.work || server.queuedRequests.length < this.servers[0].queuedRequests.length) {
       //  return sendToServer(server.id);
       //}
-      //Si el servidor está ocupado, mandar el que tenga más capacidad de trabajo (power) disponible
-      if (server.power - request.work > this.servers[0].power - request.work || server.queuedRequests.length < this.servers[0].queuedRequests.length) {
-        return sendToServer(server.id);
-      }
     }
     const server = this.servers[0];
 
