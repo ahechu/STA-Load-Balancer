@@ -22,6 +22,16 @@ export default class LoadBalancer {
     //   payload: "08319462", // Datos que envía el cliente
     //   work: 4              // Unidades de trabajo necesarias
     // }
+    for (const server of this.servers) {
+      // Si el servidor está libre, envía la petición a ese servidor.
+      if (!server.activeRequest) {
+        return sendToServer(server.id);
+      }
+      //Si el servidor está ocupado, mandar el que tenga menos peticiones en cola
+      if (server.queuedRequests.length < this.servers[0].queuedRequests.length) {
+        return sendToServer(server.id);
+      }
+    }
     const server = this.servers[0];
 
     // Envía la petición al servidor y devuelve su respuesta al cliente.
